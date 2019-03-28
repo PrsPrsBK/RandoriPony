@@ -25,11 +25,4 @@ class CollatzIterator[A: (Integer[A] val & Unsigned) = USize] is Iterator[A]
       end
     _head
 
-actor Main
-  new create(env: Env) =>
-    let iterator = CollatzIterator[U64](11)
-    for num in iterator do
-      env.out.print(num.string())
-    end
-
 // vim:expandtab ff=dos fenc=utf-8 sw=2

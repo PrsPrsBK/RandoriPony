@@ -1,20 +1,6 @@
 use "term"
 use "promises"
-
-//class Collatz
-//  fun modular(x: I64, y: I64): I64 =>
-//    ((x % y) + y) % y
-//
-//  fun collatz_length(n: I64 iso): I64 =>
-//    var len = 1
-//    while n != 1 do
-//      n = match modular(n, 2)
-//          | 0 => n / 2
-//          | _ => ((3 * n) + 1)
-//          end
-//      len = 1 + len
-//    end
-//    len
+use "package:./Collatz"
 
 class Handler is ReadlineNotify
   let _commands: Array[String] = _commands.create()
@@ -86,6 +72,7 @@ actor Main
           "Tasks:"
           "    help    - Print this message"
           "    repl    - REPL but do very little thing"
+          "    collatz - Collatz Sequence"
           ""
         ]
       end)
@@ -94,6 +81,11 @@ actor Main
     match task
     | "repl" =>
       Repl(env)
+    | "collatz" =>
+      let iterator = CollatzIterator[U64](11)
+      for num in iterator do
+        env.out.print(num.string())
+      end
     else
       _print_usage()
     end
