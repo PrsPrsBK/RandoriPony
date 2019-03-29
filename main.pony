@@ -1,6 +1,6 @@
 use "term"
 use "promises"
-use "package:./Collatz"
+use "Collatz"
 
 class Handler is ReadlineNotify
   let _commands: Array[String] = _commands.create()
