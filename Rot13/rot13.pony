@@ -23,9 +23,21 @@ primitive Rot13
 
   fun convert(moji: String): String =>
     match which(moji)
-    | Upper => moji.lower()
+    | Upper => rotate(moji)
     | Lower => moji.upper()
     | Other => moji
+    end
+
+  fun rotate(moji: String): String =>
+    let first: ISize = 0x41
+    let last: ISize = 0x5A
+    try
+      let x = (moji.at_offset(0)?).isize() // P -> 80
+      // dont know how to convert codepoint <-> string
+      let after: ISize = (13 + (x - first)) % 26
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ".substring(after, after + 1)
+    else
+      moji
     end
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
