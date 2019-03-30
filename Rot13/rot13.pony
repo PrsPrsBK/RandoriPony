@@ -1,22 +1,17 @@
-trait AlphaOrNot
-  fun first(): ISize
-  fun last(): ISize
-  fun whole(): String
-  fun isAlpha(): Bool
-
-class UpperSpec is AlphaOrNot
+primitive UpperSpec
   fun first(): ISize => 0x41
   fun last(): ISize => 0x5A
   fun whole(): String => "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   fun isAlpha(): Bool => true
 
-class LowerSpec is AlphaOrNot
+primitive LowerSpec
   fun first(): ISize => 0x61
   fun last(): ISize => 0x7A
   fun whole(): String => "abcdefghijklmnopqrstuvwxyz"
   fun isAlpha(): Bool => true
 
-class Other is AlphaOrNot
+primitive Other
+  // dummies are necessary
   fun first(): ISize => 0
   fun last(): ISize => 0
   fun whole(): String => ""
@@ -24,11 +19,7 @@ class Other is AlphaOrNot
 
 class Moji
   let _moji: String
-  /* cannot use Union and field
-   * error "can't lookup field first in this->UpperSpec ref in a union type"
-   */
-  // let moji_case: (UpperSpec|LowerSpec|Other)
-  let _moji_case: AlphaOrNot
+  let _moji_case: (UpperSpec|LowerSpec|Other)
   new create(moji: String) =>
     _moji = moji
     if UpperSpec.whole().contains(moji) then
