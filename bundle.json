@@ -3,6 +3,10 @@
     {
       "type": "local",
       "local-path": "./Collatz"
+    },
+    {
+      "type": "local",
+      "local-path": "./Rot13"
     }
   ]
 }
