@@ -22,5 +22,4 @@ class iso _TestRot13 is UnitTest
   fun name(): String => "Rot13"
   fun apply(h: TestHelper) =>
     // h.assert_eq[MojiClass](Lower, Rot13.which("p"))
-    h.assert_eq[String]("C", Rot13.convert("P"))
-    h.assert_eq[String]("b", Rot13.convert("o"))
+    h.assert_eq[String]("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", Rot13.convert("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
