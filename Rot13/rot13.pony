@@ -1,33 +1,60 @@
-class Upper
-  let first: ISize = 0x41
-  let last: ISize = 0x5A
-  let whole: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  fun eq(moji: String): Bool => whole.contains(moji)
+trait AlphaOrNot
+  fun first(): ISize
+  fun last(): ISize
+  fun whole(): String
+  fun isAlpha(): Bool
 
-class Lower
-  let first: ISize = 0x61
-  let last: ISize = 0x7A
-  let whole: String = "abcdefghijklmnopqrstuvwxyz"
-  fun eq(moji: String): Bool => whole.contains(moji)
+class UpperSpec is AlphaOrNot
+  fun first(): ISize => 0x41
+  fun last(): ISize => 0x5A
+  fun whole(): String => "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  fun isAlpha(): Bool => true
+
+class LowerSpec is AlphaOrNot
+  fun first(): ISize => 0x61
+  fun last(): ISize => 0x7A
+  fun whole(): String => "abcdefghijklmnopqrstuvwxyz"
+  fun isAlpha(): Bool => true
+
+class Other is AlphaOrNot
+  fun first(): ISize => 0
+  fun last(): ISize => 0
+  fun whole(): String => ""
+  fun isAlpha(): Bool => false
+
+class Moji
+  let _moji: String
+  /* cannot use Union and field
+   * error "can't lookup field first in this->UpperSpec ref in a union type"
+   */
+  // let moji_case: (UpperSpec|LowerSpec|Other)
+  let _moji_case: AlphaOrNot
+  new create(moji: String) =>
+    _moji = moji
+    if UpperSpec.whole().contains(moji) then
+      _moji_case = UpperSpec
+    elseif LowerSpec.whole().contains(moji) then
+      _moji_case = LowerSpec
+    else
+      _moji_case = Other
+    end
+
+  fun rotate(): String =>
+    if _moji_case.isAlpha() then
+      try
+        let before = (_moji.at_offset(0)?).isize()
+        let after: ISize = (13 + (before - _moji_case.first())) %% 26
+        // dont know how to convert codepoint <-> string
+        _moji_case.whole().substring(after, after + 1)
+      else
+        _moji
+      end
+    else
+      _moji
+    end
 
 primitive Rot13
   fun convert(moji: String): String =>
-    try
-      match moji
-      | Upper =>
-        let before = (moji.at_offset(0)?).isize() // P -> 80
-        let after: ISize = (13 + (before - Upper.first)) %% 26
-        // dont know how to convert codepoint <-> string
-        Upper.whole.substring(after, after + 1)
-      | Lower => moji
-        let before = (moji.at_offset(0)?).isize()
-        let after: ISize = (13 + (before - Lower.first)) %% 26
-        Lower.whole.substring(after, after + 1)
-      else
-        moji
-      end
-    else
-      moji
-    end
+    Moji(moji).rotate()
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
