@@ -22,20 +22,28 @@ primitive Rot13
     end
 
   fun convert(moji: String): String =>
-    match which(moji)
-    | Upper => rotate(moji)
-    | Lower => moji.upper()
-    | Other => moji
-    end
-
-  fun rotate(moji: String): String =>
-    let first: ISize = 0x41
-    let last: ISize = 0x5A
+    var first: ISize = 0
+    var last: ISize = 0
+    var range: String = ""
     try
-      let x = (moji.at_offset(0)?).isize() // P -> 80
-      // dont know how to convert codepoint <-> string
-      let after: ISize = (13 + (x - first)) % 26
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ".substring(after, after + 1)
+      match which(moji)
+      | Upper =>
+        first = 0x41
+        last = 0x5A
+        range = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        let before = (moji.at_offset(0)?).isize() // P -> 80
+        // dont know how to convert codepoint <-> string
+        let after: ISize = (13 + (before - first)) %% 26
+        range.substring(after, after + 1)
+      | Lower => moji
+        first = 0x61
+        last = 0x7A
+        range = "abcdefghijklmnopqrstuvwxyz"
+        let before = (moji.at_offset(0)?).isize()
+        let after: ISize = (13 + (before - first)) %% 26
+        range.substring(after, after + 1)
+      | Other => moji
+      end
     else
       moji
     end
