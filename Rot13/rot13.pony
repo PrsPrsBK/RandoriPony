@@ -1,51 +1,29 @@
-primitive UpperSpec
-  fun first(): ISize => 0x41
-  fun last(): ISize => 0x5A
-  fun whole(): String => "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  fun isAlpha(): Bool => true
+primitive UpperCase
+  fun first(): U32 => 0x41
+  fun last(): U32 => 0x5A
 
-primitive LowerSpec
-  fun first(): ISize => 0x61
-  fun last(): ISize => 0x7A
-  fun whole(): String => "abcdefghijklmnopqrstuvwxyz"
-  fun isAlpha(): Bool => true
-
-primitive Other
-  // dummies are necessary
-  fun first(): ISize => 0
-  fun last(): ISize => 0
-  fun whole(): String => ""
-  fun isAlpha(): Bool => false
-
-class Moji
-  let _moji: String
-  let _moji_case: (UpperSpec|LowerSpec|Other)
-  new create(moji: String) =>
-    _moji = moji
-    if UpperSpec.whole().contains(moji) then
-      _moji_case = UpperSpec
-    elseif LowerSpec.whole().contains(moji) then
-      _moji_case = LowerSpec
-    else
-      _moji_case = Other
-    end
-
-  fun rotate(): String =>
-    if _moji_case.isAlpha() then
-      try
-        let before = (_moji.at_offset(0)?).isize()
-        let after: ISize = (13 + (before - _moji_case.first())) %% 26
-        // dont know how to convert codepoint <-> string
-        _moji_case.whole().substring(after, after + 1)
-      else
-        _moji
-      end
-    else
-      _moji
-    end
+primitive LowerCase
+  fun first(): U32 => 0x61
+  fun last(): U32 => 0x7A
 
 primitive Rot13
-  fun convert(moji: String): String =>
-    Moji(moji).rotate()
+  fun convert(origText: String): String =>
+    var result: String = ""
+    // NEXT: use Sequence or yield or so
+    for rune in origText.runes() do
+      // failed to use String.push_utf32()
+      // result.push_utf32(rotate(rune))
+      result = result.add(String.from_utf32(rotate(rune)))
+    end
+    result
+
+  fun rotate(orig: U32): U32 =>
+    if (UpperCase.first() <= orig) and (orig <= UpperCase.last()) then
+      UpperCase.first() + ((13 + (orig - UpperCase.first())) %% 26)
+    elseif (LowerCase.first() <= orig) and (orig <= LowerCase.last()) then
+      LowerCase.first() + ((13 + (orig - LowerCase.first())) %% 26)
+    else
+      orig
+    end
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
