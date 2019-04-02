@@ -11,6 +11,7 @@ actor Main is TestList
   fun tag tests(test: PonyTest) =>
     test(_TestCollatz)
     test(_TestRot13)
+    test(_TestActivePattern)
 
 class iso _TestCollatz is UnitTest
   fun name(): String => "Next Number in Collatz Sequence"
@@ -24,3 +25,9 @@ class iso _TestRot13 is UnitTest
     // h.assert_eq[MojiClass](Lower, Rot13.which("p"))
     h.assert_eq[String]("nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM", Rot13.convert("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
     h.assert_eq[String]("12345nopqrstuvwxyzポニーabcdefghijklm67890", Rot13.convert("12345abcdefghijklmポニーnopqrstuvwxyz67890"))
+
+class iso _TestActivePattern is UnitTest
+  fun name(): String => "Rot13 by Pseudo-ActivePattern"
+  fun apply(h: TestHelper) =>
+    h.assert_eq[String]("12345nopqrstuvwxyzポニーabcdefghijklm67890", PatAdapt.convertA("12345abcdefghijklmポニーnopqrstuvwxyz67890"))
+    h.assert_eq[String]("12345nopqrstuvwxyzポニーabcdefghijklm67890", PatAdapt.convertB("12345abcdefghijklmポニーnopqrstuvwxyz67890"))
