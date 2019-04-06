@@ -26,8 +26,4 @@ class iso _TestRot13 is UnitTest
     h.assert_eq[String]("nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM", Rot13.convert("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
     h.assert_eq[String]("12345nopqrstuvwxyzポニーabcdefghijklm67890", Rot13.convert("12345abcdefghijklmポニーnopqrstuvwxyz67890"))
 
-class iso _TestActivePattern is UnitTest
-  fun name(): String => "Rot13 by Pseudo-ActivePattern"
-  fun apply(h: TestHelper) =>
-    h.assert_eq[String]("12345nopqrstuvwxyzポニーabcdefghijklm67890", PatAdapt.convertA("12345abcdefghijklmポニーnopqrstuvwxyz67890"))
-    h.assert_eq[String]("12345nopqrstuvwxyzポニーabcdefghijklm67890", PatAdapt.convertB("12345abcdefghijklmポニーnopqrstuvwxyz67890"))
+// vim:expandtab ff=dos fenc=utf-8 sw=2
