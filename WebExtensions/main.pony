@@ -1,17 +1,22 @@
-class SomeHandler is AppropriateNotify
-  new create() =>
+class PingReceiver is InputNotify
+  var _env: Env
+  new iso create(env: Env) =>
+    _env = env
 
-  fun ref necessary_func_impl() =>
+  fun ref apply(data: Array[U8] iso) =>
+    _env.out.print("apply" + String.from_array(consume data))
+
+  fun ref dispose() =>
+    _env.out.print("dispose")
+    _env.input.dispose()
 
 actor Main
   new create(env: Env) =>
-    //Pseudo Names. Waiting class is not Readline Class.
-    let term = TermOrSo(WaitingStdinClass(SomeHandler, SomeStdout), SomeStdin)
-    let notifiee = object iso
-      let _term = term
-      fun ref necessary_func() => _term.necessary_func_impl()
-    end
-    //Set notifier to input-strream, that makes shift to 'waiting'.
-    SomeStdin.input_wait(consume notifiee)
+    //Set notifier to input-stream, that makes shift to 'waiting'.
+    //Access to 'Stdin' actor is limited to some env.
+    // env.input: InputStream
+    // Stdin is InputStream
+    //   apply(InputNotify)
+    env.input(PingReceiver(env))
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
