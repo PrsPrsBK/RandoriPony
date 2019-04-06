@@ -8,7 +8,6 @@ class PingReceiver is InputNotify
 
   fun ref dispose() =>
     _env.out.print("dispose")
-    _env.input.dispose()
 
 actor Main
   new create(env: Env) =>
