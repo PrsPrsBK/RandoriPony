@@ -24,7 +24,7 @@
   },
   
   "permissions":[
-    "nativeMassaging",
+    "nativeMessaging",
     "activeTab"
   ]
 

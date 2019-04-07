@@ -4,7 +4,10 @@ class PingReceiver is InputNotify
     _env = env
 
   fun ref apply(data: Array[U8] iso) =>
-    _env.out.print("apply" + String.from_array(consume data))
+    // _env.out.print("apply" + String.from_array(consume data))
+    let size: Array[U8] val = [5; 0; 0; 0]
+    _env.out.write(size)
+    _env.out.write("hello")
 
   fun ref dispose() =>
     _env.out.print("dispose")
