@@ -7,8 +7,9 @@ port.onMessage.addListener(response => {
 browser.browserAction.onClicked.addListener(() => {
   browser.tabs.query({ currentWindow: true, active: true }).then(tabs => {
     for(const tab of tabs) {
+      let date = new Date();
       console.log(`lets send${tab.url}`);
-      port.postMessage(`${Date.now()} ${tab.url}`);
+      port.postMessage(`${date.toLocaleDateString()}-${date.toLocaleTimeString()} ${tab.url}`);
     }
   });
 });

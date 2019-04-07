@@ -2,20 +2,24 @@ use "files"
 
 class PingReceiver is InputNotify
   var _env: Env
+  var _first: Bool = true
+  var _size: U32 = 0
+  let file_name = "wext.log"
   new iso create(env: Env) =>
     _env = env
 
   fun ref apply(data: Array[U8] iso) =>
-    let file_name = "wext.log"
     try
       let path = FilePath(_env.root as AmbientAuth, file_name)?
       match CreateFile(path)
       | let file: File =>
         if file.errno() is FileOK then
+          file.seek_end(0)
           file.write(consume data)
         else
           _env.out.print("noo")
         end
+        file.dispose()
       end
     else
       _env.err.print("Error opening file '" + file_name + "'")
