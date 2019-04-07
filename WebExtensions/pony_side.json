@@ -1,0 +1,7 @@
+{
+  "name": "pony_side",
+  "description": "native app messaging",
+  "path": "WebExtensions.exe",
+  "type": "stdio",
+  "allowed_extensions": [ "with_pony@prsprsbk" ]
+}
