@@ -1,5 +1,5 @@
 {
-  "name": "with_pony",
+  "name": "pony_side",
   "description": "native app messaging",
   "path": "WebExtensions.exe",
   "type": "stdio",
