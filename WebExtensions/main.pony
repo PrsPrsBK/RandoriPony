@@ -10,6 +10,7 @@ class PingReceiver is InputNotify
   new iso create(env: Env) =>
     _env = env
 
+  // TODO: use chunk specification for Stdin
   fun ref apply(data: Array[U8] iso) =>
     let reader = Reader
     reader.append(consume data)
