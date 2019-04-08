@@ -43,12 +43,53 @@ class PingReceiver is InputNotify
     end
 
   fun ref send_response() =>
-    let message = "\"hello\""
-    let writer = Writer
-    writer.u32_le(message.size().u32())
-    _env.out.writev(writer.done())
-    writer.write(message)
-    _env.out.writev(writer.done())
+    try
+      let writer = Writer
+      // all 'A' as valid js data. maybe 9999... is enough as js infinity number.
+      let long_array: Array[U8] iso = recover iso Array[U8].init(0x41, (4 * 1024) - 4) end
+      long_array.update(0, 0x22)?
+      long_array.update(long_array.size() - 1, 0x22)?
+      // header
+      writer.u32_le(long_array.size().u32())
+      _env.out.writev(writer.done())
+      // message
+      let wk_array: Array[U8] val = consume long_array
+      writer.write(wk_array)
+      _env.out.writev(writer.done())
+      // header(4) + message = 4KiB.
+      // extra 'write' (I hope 00 to be meaningless) is necessary for flush.
+      // without extra 'write', click twice the icon on browser toolbar, then flush happens.
+      let extra: Array[U8] val = [0x0]
+      _env.out.write(extra)
+    end
+    /*
+     > lets send 2019/4/9-1:29:27 https://www.google.co.jp/ background.js:11:15
+     > from pony: 4090 AAAAA...
+     */
+
+    // let message = "\"hello\""
+    // writer.u32_le(message.size().u32())
+    // _env.out.writev(writer.done())
+    // writer.write(message)
+    // _env.out.writev(writer.done())
+
+    // writer.u32_le(message.size().u32())
+    // _env.out.writev(writer.done())
+    // writer.write(message)
+    // _env.out.writev(writer.done())
+
+    // writer.u32_le(message.size().u32() + 2)
+    // _env.out.writev(writer.done())
+    // writer.write(message)
+    // _env.out.writev(writer.done())
+
+    // writer.u32_le(message.size().u32())
+    // writer.write(message)
+    // _env.out.writev(writer.done())
+
+    // writer.u32_le(message.size().u32() + 2)
+    // writer.write(message)
+    // _env.out.writev(writer.done())
     // not flushed?
     log("write")
 
