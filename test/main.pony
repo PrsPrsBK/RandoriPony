@@ -1,6 +1,7 @@
 use "ponytest"
 use "package:../Collatz"
 use "package:../Rot13"
+use "package:../Farey"
 
 actor Main is TestList
   new create(env: Env) =>
@@ -11,7 +12,7 @@ actor Main is TestList
   fun tag tests(test: PonyTest) =>
     test(_TestCollatz)
     test(_TestRot13)
-    test(_TestActivePattern)
+    test(_TestFarey)
 
 class iso _TestCollatz is UnitTest
   fun name(): String => "Next Number in Collatz Sequence"
@@ -25,5 +26,16 @@ class iso _TestRot13 is UnitTest
     // h.assert_eq[MojiClass](Lower, Rot13.which("p"))
     h.assert_eq[String]("nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM", Rot13.convert("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
     h.assert_eq[String]("12345nopqrstuvwxyzポニーabcdefghijklm67890", Rot13.convert("12345abcdefghijklmポニーnopqrstuvwxyz67890"))
+
+class iso _TestFarey is UnitTest
+  fun name(): String => "Get ratio using Farey Sequence"
+  fun apply(h: TestHelper) =>
+    var wk_tuple = Farey.get_ratio(0.5)
+    h.assert_eq[U64](1, wk_tuple._1)
+    h.assert_eq[U64](2, wk_tuple._2)
+    wk_tuple = Farey.get_ratio(0.2777)
+    // I choiced 5/18 at F_10(after loop nth = 9), and equal 0.27777...
+    h.assert_eq[U64](5, wk_tuple._1)
+    h.assert_eq[U64](18, wk_tuple._2)
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2
