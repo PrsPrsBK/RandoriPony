@@ -1,6 +1,6 @@
 use "debug"
 
-primitive Farey
+primitive SternBrocot
   fun get_ratio(target: F64, epsilon: F64 = 0.001): (U64, U64) =>
     var nth: U64 = 1
     var left: (U64, U64, F64) = (0, 1, 0.0)

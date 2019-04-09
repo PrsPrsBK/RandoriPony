@@ -1,7 +1,7 @@
 use "ponytest"
 use "package:../Collatz"
 use "package:../Rot13"
-use "package:../Farey"
+use "package:../SternBrocot"
 
 actor Main is TestList
   new create(env: Env) =>
@@ -23,17 +23,16 @@ class iso _TestCollatz is UnitTest
 class iso _TestRot13 is UnitTest
   fun name(): String => "Rot13"
   fun apply(h: TestHelper) =>
-    // h.assert_eq[MojiClass](Lower, Rot13.which("p"))
     h.assert_eq[String]("nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM", Rot13.convert("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
     h.assert_eq[String]("12345nopqrstuvwxyzポニーabcdefghijklm67890", Rot13.convert("12345abcdefghijklmポニーnopqrstuvwxyz67890"))
 
 class iso _TestFarey is UnitTest
-  fun name(): String => "Get ratio using Farey Sequence"
+  fun name(): String => "Get ratio by walk on Stern-Brocot Tree"
   fun apply(h: TestHelper) =>
-    var wk_tuple = Farey.get_ratio(0.5)
+    var wk_tuple = SternBrocot.get_ratio(0.5)
     h.assert_eq[U64](1, wk_tuple._1)
     h.assert_eq[U64](2, wk_tuple._2)
-    wk_tuple = Farey.get_ratio(0.2777)
+    wk_tuple = SternBrocot.get_ratio(0.2777)
     // I choiced 5/18 at F_10(after loop nth = 9), and equal 0.27777...
     h.assert_eq[U64](5, wk_tuple._1)
     h.assert_eq[U64](18, wk_tuple._2)
