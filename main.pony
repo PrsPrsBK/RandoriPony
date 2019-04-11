@@ -1,4 +1,5 @@
 use "term"
+use "debug"
 use "promises"
 use "Collatz"
 
@@ -64,18 +65,17 @@ actor Main
 
   fun _print_usage() =>
     env.out.printv(
-      recover
-        [ "Usage: RandoriPony TASK [...]"
-          ""
-          "    Select a task."
-          ""
-          "Tasks:"
-          "    help    - Print this message"
-          "    repl    - REPL but do very little thing"
-          "    collatz - Collatz Sequence"
-          ""
-        ]
-      end)
+      [ "Usage: RandoriPony TASK [...]"
+        ""
+        "    Select a task."
+        ""
+        "Tasks:"
+        "    help    - Print this message"
+        "    repl    - REPL but do very little thing"
+        "    collatz - Collatz Sequence"
+        ""
+      ]
+    )
 
   fun command(task: String, rest: Array[String] box) =>
     match task
