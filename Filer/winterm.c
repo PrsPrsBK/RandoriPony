@@ -1,7 +1,7 @@
 #include <windows.h>
 
 __declspec(dllexport) 
-extern int get_col();
+int get_col();
 
 int get_col() {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
