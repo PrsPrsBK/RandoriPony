@@ -3,11 +3,11 @@ use "debug"
 use "promises"
 use "Collatz"
 
-class Handler is ReadlineNotify
+class WordHandler is ReadlineNotify
   let _commands: Array[String] = _commands.create()
   var _i: U64 = 0
 
-  new create() =>
+  new iso create() =>
     _commands.push("quit")
     _commands.push("happy")
     _commands.push("hello")
@@ -61,11 +61,11 @@ class CollatzHandler is ReadlineNotify
     end
 
 actor Repl
-  new create(env: Env) =>
+  new create(env: Env, handler: ReadlineNotify iso) =>
     env.out.print("Use 'quit' to exit.")
 
     // Building a delegate manually
-    let term = ANSITerm(Readline(recover Handler end, env.out), env.input)
+    let term = ANSITerm(Readline(consume handler, env.out), env.input)
     term.prompt("0 > ")
 
     let notify = object iso
@@ -90,7 +90,7 @@ actor Main
         ""
         "Tasks:"
         "    help    - Print this message"
-        "    repl    - REPL but do very little thing"
+        "    word    - Rememver given word"
         "    collatz - Collatz Sequence"
         ""
       ]
@@ -99,7 +99,7 @@ actor Main
   fun command(task: String, rest: Array[String] box) =>
     match task
     | "repl" =>
-      Repl(env)
+      Repl(env, WordHandler)
     | "collatz" =>
       env.out.print("wip")
     else
