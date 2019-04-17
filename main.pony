@@ -41,6 +41,25 @@ class Handler is ReadlineNotify
 
     r
 
+class CollatzHandler is ReadlineNotify
+  var _i: U64 = 0
+  fun ref apply(line: String, prompt: Promise[String]) =>
+    if line == "quit" then
+      prompt.reject()
+    else
+      var result: String ref = String()
+      try
+        let iterator = CollatzIterator[U64](line.u64()?)
+        for num in iterator do
+          result.append(num.string())
+          result.append(" ")
+        end
+        result.append("\n")
+      end
+      _i = _i + 1
+      prompt(result + _i.string() + " > ")
+    end
+
 actor Repl
   new create(env: Env) =>
     env.out.print("Use 'quit' to exit.")
@@ -82,10 +101,7 @@ actor Main
     | "repl" =>
       Repl(env)
     | "collatz" =>
-      let iterator = CollatzIterator[U64](11)
-      for num in iterator do
-        env.out.print(num.string())
-      end
+      env.out.print("wip")
     else
       _print_usage()
     end
