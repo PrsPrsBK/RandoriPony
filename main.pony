@@ -47,17 +47,17 @@ class CollatzHandler is ReadlineNotify
     if line == "quit" then
       prompt.reject()
     else
-      var result: String ref = String()
+      var result = line + " "
       try
         let iterator = CollatzIterator[U64](line.u64()?)
         for num in iterator do
-          result.append(num.string())
-          result.append(" ")
+          result = result + num.string() + " "
         end
-        result.append("\n")
+        // when you use '\n', every keydown will result in outputs again of (n-1)th apply().
+        // result = result + "\n"
+        _i = _i + 1
+        prompt((result + _i.string()) + " > ")
       end
-      _i = _i + 1
-      prompt(result + _i.string() + " > ")
     end
 
 actor Repl
@@ -98,10 +98,10 @@ actor Main
 
   fun command(task: String, rest: Array[String] box) =>
     match task
-    | "repl" =>
+    | "word" =>
       Repl(env, WordHandler)
     | "collatz" =>
-      env.out.print("wip")
+      Repl(env, CollatzHandler)
     else
       _print_usage()
     end
