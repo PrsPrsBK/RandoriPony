@@ -3,6 +3,7 @@ use "debug"
 use "promises"
 use "Collatz"
 use "Rot13"
+use "SternBrocot"
 
 class WordHandler is ReadlineNotify
   let _commands: Array[String] = _commands.create()
@@ -72,6 +73,21 @@ class Rot13Handler is ReadlineNotify
       prompt((result + _i.string()) + " > ")
     end
 
+class RatioHandler is ReadlineNotify
+  var _i: U64 = 0
+  fun ref apply(line: String, prompt: Promise[String]) =>
+    if line == "quit" then
+      prompt.reject()
+    else
+      try
+        var result = SternBrocot.get_ratio(line.f64()?).string() + " "
+        _i = _i + 1
+        prompt((result + _i.string()) + " > ")
+      else
+        prompt("ERROR > ")
+      end
+    end
+
 actor Repl
   new create(env: Env, handler: ReadlineNotify iso) =>
     env.out.print("Use 'quit' to exit.")
@@ -105,6 +121,7 @@ actor Main
         "    word    - Rememver given word"
         "    collatz - Collatz Sequence"
         "    rot13   - Rot13 conversion"
+        "    ratio   - get ratio out of 0.2777 or so"
         ""
       ]
     )
@@ -117,6 +134,8 @@ actor Main
       Repl(env, CollatzHandler)
     | "rot13" =>
       Repl(env, Rot13Handler)
+    | "ratio" =>
+      Repl(env, RatioHandler)
     else
       _print_usage()
     end
