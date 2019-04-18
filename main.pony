@@ -2,6 +2,7 @@ use "term"
 use "debug"
 use "promises"
 use "Collatz"
+use "Rot13"
 
 class WordHandler is ReadlineNotify
   let _commands: Array[String] = _commands.create()
@@ -60,6 +61,17 @@ class CollatzHandler is ReadlineNotify
       end
     end
 
+class Rot13Handler is ReadlineNotify
+  var _i: U64 = 0
+  fun ref apply(line: String, prompt: Promise[String]) =>
+    if line == "quit" then
+      prompt.reject()
+    else
+      var result = Rot13.convert(line) + " "
+      _i = _i + 1
+      prompt((result + _i.string()) + " > ")
+    end
+
 actor Repl
   new create(env: Env, handler: ReadlineNotify iso) =>
     env.out.print("Use 'quit' to exit.")
@@ -92,6 +104,7 @@ actor Main
         "    help    - Print this message"
         "    word    - Rememver given word"
         "    collatz - Collatz Sequence"
+        "    rot13   - Rot13 conversion"
         ""
       ]
     )
@@ -102,6 +115,8 @@ actor Main
       Repl(env, WordHandler)
     | "collatz" =>
       Repl(env, CollatzHandler)
+    | "rot13" =>
+      Repl(env, Rot13Handler)
     else
       _print_usage()
     end
