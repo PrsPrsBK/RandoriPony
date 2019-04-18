@@ -29,16 +29,16 @@ class iso _TestRot13 is UnitTest
 class iso _TestFarey is UnitTest
   fun name(): String => "Get ratio by walk on Stern-Brocot Tree"
   fun apply(h: TestHelper) =>
-    var wk_tuple = SternBrocot.get_ratio(0.5)
-    h.assert_eq[U64](1, wk_tuple._1)
-    h.assert_eq[U64](2, wk_tuple._2)
-    wk_tuple = SternBrocot.get_ratio(0.2777)
+    var wk_ratio = SternBrocot.get_ratio(0.5)
+    h.assert_eq[U64](1, wk_ratio.fst)
+    h.assert_eq[U64](2, wk_ratio.snd)
+    wk_ratio = SternBrocot.get_ratio(0.2777)
     // I choiced 5/18 at F_10(after loop nth = 9), and equal 0.27777...
-    h.assert_eq[U64](5, wk_tuple._1)
-    h.assert_eq[U64](18, wk_tuple._2)
+    h.assert_eq[U64](5, wk_ratio.fst)
+    h.assert_eq[U64](18, wk_ratio.snd)
     // Pi. I expected 16/113. without epsilon, 9/64. with epsilon 0.0001, 15/106.
-    wk_tuple = SternBrocot.get_ratio(0.1415926535, 0.00005)
-    h.assert_eq[U64](16, wk_tuple._1)
-    h.assert_eq[U64](113, wk_tuple._2)
+    wk_ratio = SternBrocot.get_ratio(0.1415926535, 0.00005)
+    h.assert_eq[U64](16, wk_ratio.fst)
+    h.assert_eq[U64](113, wk_ratio.snd)
 
 // vim:expandtab ff=dos fenc=utf-8 sw=2

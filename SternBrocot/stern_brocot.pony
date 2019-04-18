@@ -21,26 +21,26 @@ class Ratio
   fun string(): String => fst.string() + "/" + snd.string()
 
 primitive SternBrocot
-  fun get_ratio(target: F64, epsilon: F64 = 0.001): (U64, U64) =>
+  fun get_ratio(target: F64, epsilon: F64 = 0.001): Ratio =>
     var nth: U64 = 1
     var left: Ratio = Ratio(0, 1)
     var center: Ratio = Ratio(1, 2)
     var right: Ratio = Ratio(1, 1)
     var enough = false
-    var answer: (U64, U64) = (1, 1)
+    var answer: Ratio = Ratio(1, 1)
     repeat
       Debug.out(nth.string() + " " + left.string() + " " + center.string() + " " + right.string())
       if epsilon >= left.diff(target) then
-        answer = left.get_pair()
+        answer = left
         enough = true
       elseif epsilon >= center.diff(target).abs() then
-        answer = center.get_pair()
+        answer = center
         enough = true
       elseif epsilon >= right.diff(target).abs() then
-        answer = right.get_pair()
+        answer = right
         enough = true
       else
-        answer = center.get_pair() //no reason
+        answer = center //no reason
       end
       if enough == false then
         if target <= center.get_calc() then
