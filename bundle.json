@@ -7,6 +7,10 @@
     {
       "type": "local",
       "local-path": "./Rot13"
+    },
+    {
+      "type": "local",
+      "local-path": "./SternBrocot"
     }
   ]
 }
